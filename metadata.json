@@ -1,0 +1,9 @@
+{
+  "name": "UKURAGA",
+  "description": "A Progressive Web App for manually tracking health and body measurements. It provides progress reports through numbers and graphs, includes weekly reminders, and supports both light and dark themes.",
+  "requestFramePermissions": [],
+  "prompt": "",
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
