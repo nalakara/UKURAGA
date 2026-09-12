@@ -64,6 +64,15 @@ export const AIInsights: React.FC = () => {
         getAIInsights();
     };
 
+    const handleRemoveKey = async () => {
+        setUserApiKey('');
+        setApiKeyInput('');
+        setShowKeyPrompt(false);
+        setError('');
+        const serverHasKey = await checkServerKeyStatus();
+        setHasKey(serverHasKey);
+    };
+
     const getAIInsights = async () => {
         setIsLoading(true);
         setError('');
@@ -156,6 +165,14 @@ ${Object.keys(recentMeasurements).length > 0 ? Object.entries(recentMeasurements
                             >
                                 Simpan & Analisis
                             </button>
+                            {getUserApiKey() && (
+                                <button
+                                    onClick={handleRemoveKey}
+                                    className="min-h-[40px] px-3 py-2 text-xs font-medium rounded-lg text-red-600 hover:text-red-700 dark:text-red-400 transition-colors"
+                                >
+                                    Hapus Kunci
+                                </button>
+                            )}
                             <button
                                 onClick={() => setShowKeyPrompt(false)}
                                 className="min-h-[40px] px-3 py-2 text-xs font-medium rounded-lg text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
@@ -165,14 +182,32 @@ ${Object.keys(recentMeasurements).length > 0 ? Object.entries(recentMeasurements
                         </div>
                     </div>
                 ) : (
-                    <button
-                        onClick={getAIInsights}
-                        disabled={isLoading}
-                        className="w-full min-h-[44px] flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-card transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <TrendingUpIcon className="h-5 w-5" />
-                        <span>{isLoading ? t('ai.loading') : t('ai.button')}</span>
-                    </button>
+                    <>
+                        <button
+                            onClick={getAIInsights}
+                            disabled={isLoading}
+                            className="w-full min-h-[44px] flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-card transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <TrendingUpIcon className="h-5 w-5" />
+                            <span>{isLoading ? t('ai.loading') : t('ai.button')}</span>
+                        </button>
+                        <div className="mt-2.5 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 px-1">
+                            <span className="truncate">
+                                {getUserApiKey() ? '✓ Kunci Pribadi (BYOK)' : (hasKey ? '✓ Server AI Aktif' : 'API Key: Belum disetel')}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setApiKeyInput(getUserApiKey());
+                                    setShowKeyPrompt(true);
+                                    setError('');
+                                }}
+                                className="text-indigo-600 dark:text-indigo-400 hover:underline shrink-0 ml-2"
+                            >
+                                {getUserApiKey() ? 'Kelola Kunci' : 'Gunakan Kunci Sendiri'}
+                            </button>
+                        </div>
+                    </>
                 )}
                 
                 {isLoading && !result && (
@@ -189,8 +224,19 @@ ${Object.keys(recentMeasurements).length > 0 ? Object.entries(recentMeasurements
                 )}
 
                 {error && !showKeyPrompt && (
-                    <div className="mt-4 p-3 bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-200 rounded-md text-sm">
-                        {error}
+                    <div className="mt-4 p-3.5 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/60 rounded-lg text-sm text-left">
+                        <p className="text-red-700 dark:text-red-300 mb-2">{error}</p>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setApiKeyInput(getUserApiKey());
+                                setShowKeyPrompt(true);
+                                setError('');
+                            }}
+                            className="inline-flex items-center text-xs font-semibold text-indigo-700 dark:text-indigo-300 hover:underline"
+                        >
+                            Atur Gemini API Key (BYOK) &rarr;
+                        </button>
                     </div>
                 )}
             </div>

@@ -59,8 +59,8 @@
 
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          // If in development preview or localhost, unregister any stale service workers to prevent stuck blank screens
-          if (window.location.hostname === 'localhost' || window.location.hostname.includes('ais-dev')) {
+          // If in development preview, shared preview, or localhost, unregister any stale service workers to prevent stuck blank screens or stale API caching
+          if (window.location.hostname === 'localhost' || window.location.hostname.includes('ais-') || window.location.hostname.includes('run.app')) {
             navigator.serviceWorker.getRegistrations().then(registrations => {
               for (const registration of registrations) {
                 registration.unregister();

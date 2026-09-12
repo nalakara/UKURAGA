@@ -21,6 +21,8 @@ async function startServer() {
 
   // AI Generation proxy supporting Server Key and BYOK (Bring Your Own Key)
   app.post("/api/gemini/generate", async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+
     const userApiKey = (req.headers["x-gemini-api-key"] as string)?.trim();
     const serverApiKey = process.env.GEMINI_API_KEY?.trim();
     const apiKey = userApiKey || serverApiKey;
@@ -51,9 +53,12 @@ async function startServer() {
       return res.json({ text: response.text });
     } catch (error: any) {
       console.error("Gemini API Error:", error?.message || error);
-      return res.status(500).json({
-        error: "GEMINI_ERROR",
-        message: error?.message || "Gagal memproses permintaan AI."
+      const isKeyError = error?.message?.includes("API key not valid") || error?.status === 400 || error?.status === 403;
+      return res.status(isKeyError ? 401 : 500).json({
+        error: isKeyError ? "INVALID_API_KEY" : "GEMINI_ERROR",
+        message: isKeyError
+          ? "API Key Gemini tidak valid atau kuota terlampaui. Periksa kembali API Key Anda."
+          : (error?.message || "Gagal memproses permintaan AI.")
       });
     }
   });
