@@ -2,6 +2,8 @@
 
 > Progressive Web App (PWA) pelacak ukuran lingkar tubuh, metrik komposisi fisik, dan galeri foto transformasi secara mandiri dengan penyimpanan lokal (offline-first) dan wawasan analitis AI opsional.
 
+🌐 **Live Demo**: https://ukuraga.nalakara.com
+
 ---
 
 ## Ringkasan Proyek (Overview)
@@ -151,3 +153,18 @@
 - **Penyimpanan Foto**: Jangan simpan foto ke `localStorage`. Gunakan fungsi pembantu di `lib/storage.ts` (`savePhotoToDB`, `getAllPhotosFromDB`) yang menggunakan IndexedDB dan kompresi kanvas.
 - **Manajemen Tanggal**: Selalu perhatikan zona waktu lokal vs UTC saat memproses tanggal pengukuran (`YYYY-MM-DD`). Gunakan helper di `lib/utils.ts` atau pemotongan string ISO untuk menghindari pergeseran tanggal sebesar 1 hari akibat perbedaan offset UTC.
 - **Konfigurasi Lingkungan**: Buat berkas `.env` dengan variabel `GEMINI_API_KEY` jika ingin menyediakan fitur AI secara global tanpa mewajibkan pengguna memasukkan API key pribadi (BYOK).
+
+## Cara Menjalankan
+
+```bash
+npm install
+cp .env.example .env   # opsional: isi GEMINI_API_KEY untuk wawasan AI
+npm run dev
+```
+
+Buka `http://localhost:3000`.
+---
+
+## License
+
+MIT License © 2026 Yudhan Sebastian
